@@ -46,6 +46,9 @@ public class BreadthFirstSearch<S> implements Search<S> {
             if (pred.test(todo.getState(), egressEdges)) {
                 pathCollector.add(todo.getPath());
             }
+            if (finish.test(todo.getState(), egressEdges)) {
+                return new Graph<S>(names, seen);
+            }
             seen.put(todo.getState(), egressEdges);
             for (EgressEdge<S> egressEdge : egressEdges) {
                 if (!seen.containsKey(egressEdge.getValue())) {
