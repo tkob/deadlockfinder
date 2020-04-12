@@ -9,7 +9,7 @@ import deadlockfinder.DeadLockFinder;
 import deadlockfinder.DeadLockFinder.Lts;
 import deadlockfinder.DeadLockFinder.Process;
 import deadlockfinder.DeadLockFinder.State;
-import deadlockfinder.search.EgressEdge;
+import deadlockfinder.search.Path;
 
 public abstract class ModelSupport<R> {
 
@@ -22,8 +22,8 @@ public abstract class ModelSupport<R> {
     public void run(String[] args) throws IOException {
         final Lts<R> lts = deadLockFinder.concurrentComposition(r0(), processes());
 
-        for (List<EgressEdge<State<R>>> deadLockPath : lts.getDeadLockPaths()) {
-            System.out.println(deadLockPath);
+        for (Path<State<R>> deadLockPath : lts.getDeadLockPaths()) {
+            deadLockPath.print(new PrintWriter(System.out));
         }
 
         if (args.length > 0) {

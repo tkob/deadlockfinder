@@ -1,17 +1,18 @@
 package deadlockfinder;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import deadlockfinder.search.BreadthFirstSearch;
 import deadlockfinder.search.EgressEdge;
 import deadlockfinder.search.Graph;
+import deadlockfinder.search.Path;
 import deadlockfinder.search.Search;
 import lombok.Value;
 
@@ -54,9 +55,10 @@ class BreadthFirstSearchTest {
             Inner.of(Leaf.of("C"), Inner.of(Leaf.of("D"), Leaf.of("E"))));
 
         final Search<Node<String>> bfs = new BreadthFirstSearch<Node<String>>();
-        final Collection<List<EgressEdge<Node<String>>>> foundPaths = new ArrayList<>();
-        final Graph<Node<String>> graph =
-            bfs.search(tree, node -> node.accept(new NodeVisitor<String, List<EgressEdge<Node<String>>>>() {
+        final Collection<Path<Node<String>>> foundPaths = new ArrayList<>();
+        final Graph<Node<String>> graph = bfs.search(
+            tree,
+            node -> node.accept(new NodeVisitor<String, Collection<EgressEdge<Node<String>>>>() {
 
                 @Override
                 public List<EgressEdge<Node<String>>> visitLeaf(Leaf<String> leaf) {
@@ -69,7 +71,8 @@ class BreadthFirstSearchTest {
                         EgressEdge.of("left", inner.getLeft()),
                         EgressEdge.of("right", inner.getRight()));
                 }
-            }), (node, egressEdges) -> node.accept(new NodeVisitor<String, Boolean>() {
+            }),
+            (node, egressEdges) -> node.accept(new NodeVisitor<String, Boolean>() {
 
                 @Override
                 public Boolean visitLeaf(Leaf<String> leaf) {
@@ -80,12 +83,12 @@ class BreadthFirstSearchTest {
                 public Boolean visitInner(Inner<String> inner) {
                     return false;
                 }
-            }), (node, egressEdges) -> false, foundPaths);
+            }),
+            (node, egressEdges) -> false,
+            foundPaths);
+
         System.err.println(graph);
-        System.err.println(
-            foundPaths.stream()
-                .map(path -> path.stream().map(edge -> edge.getLabel()).collect(Collectors.toList()))
-                .collect(Collectors.toList()));
+        foundPaths.stream().forEach(path -> path.print(new PrintWriter(System.err)));
     }
 
 }

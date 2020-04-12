@@ -1,7 +1,6 @@
 package deadlockfinder.search;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -16,6 +15,6 @@ public interface Search<S> {
      */
     Graph<S> search(S initialState, Function<S, Collection<EgressEdge<S>>> next,
             BiPredicate<S, Collection<EgressEdge<S>>> pred, BiPredicate<S, Collection<EgressEdge<S>>> finish,
-            Collection<List<EgressEdge<S>>> pathCollector);
+            Collection<Path<S>> pathCollector);
 
 }

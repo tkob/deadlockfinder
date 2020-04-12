@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import deadlockfinder.search.BreadthFirstSearch;
 import deadlockfinder.search.EgressEdge;
 import deadlockfinder.search.Graph;
+import deadlockfinder.search.Path;
 import deadlockfinder.search.Search;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -130,7 +131,7 @@ public class DeadLockFinder {
     @Value
     public static class Lts<R> {
         final Graph<State<R>> states;
-        final Collection<List<EgressEdge<State<R>>>> deadLockPaths;
+        final Collection<Path<State<R>>> deadLockPaths;
 
         public void printDot(PrintWriter writer) {
             writer.println("digraph {");
@@ -204,7 +205,7 @@ public class DeadLockFinder {
         };
         final Search<State<R>> search = new BreadthFirstSearch<State<R>>();
 
-        final Collection<List<EgressEdge<State<R>>>> deadLockPaths = new ArrayList<>();
+        final Collection<Path<State<R>>> deadLockPaths = new ArrayList<>();
         final Graph<State<R>> graph = search.search(
             s0,
             next,
