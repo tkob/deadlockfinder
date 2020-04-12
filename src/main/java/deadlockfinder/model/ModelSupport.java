@@ -23,8 +23,10 @@ public abstract class ModelSupport<R> {
         final Lts<R> lts = deadLockFinder.concurrentComposition(r0(), processes());
 
         for (Path<State<R>> deadLockPath : lts.getDeadLockPaths()) {
+            System.out.println("------------");
             deadLockPath.print(new PrintWriter(System.out));
         }
+        System.out.println("------------");
 
         if (args.length > 0) {
             try (PrintWriter writer = new PrintWriter(new FileOutputStream(args[0]))) {
