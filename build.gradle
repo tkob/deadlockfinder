@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'eclipse'
+    id 'checkstyle'
+    id "com.diffplug.gradle.spotless" version "3.24.2"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // This dependency is used by the application.
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'deadlockfinder.App'
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}
+
+eclipse.jdt.file {
+    withProperties { properties ->
+        def formatter = new XmlSlurper().parse('config/eclipse/formatter.xml')
+        formatter.profile.setting.each {
+            properties.put(it.@id as String, it.@value as String)
+        }
+    }
+}
+
+task dotCheckstyle {
+    doLast {
+        file(".checkstyle").text = """<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
+  <local-check-config name="main" location="config/checkstyle/checkstyle.xml" type="project" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="main" local="true">
+    <file-match-pattern match-pattern="src/main" include-pattern="true"/>
+    <file-match-pattern match-pattern="src/test" include-pattern="true"/>
+  </fileset>
+</fileset-config>"""
+    }
+}
+tasks.eclipse.dependsOn(dotCheckstyle)
+
+spotless {
+    java {
+        target project.fileTree(project.rootDir) {
+            include 'src/*/java/**/*.java'
+        }
+        eclipse().configFile 'config/eclipse/formatter.xml'
+    }
+}
+
+checkstyle {
+    toolVersion '8.28'
+}
+checkstyleMain {
+    source = fileTree('src/main/java')
+}
