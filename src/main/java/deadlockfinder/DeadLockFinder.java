@@ -126,6 +126,11 @@ public class DeadLockFinder {
         public boolean isDeadLock() {
             return true;
         }
+
+        @Override
+        public String toString() {
+            return processCursors.toString() + ", " + variables.toString();
+        }
     }
 
     @Value
