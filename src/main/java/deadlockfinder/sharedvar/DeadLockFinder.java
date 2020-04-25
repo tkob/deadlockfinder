@@ -135,8 +135,8 @@ public class DeadLockFinder {
 
     @Value
     public static class Lts<R> {
-        final Graph<State<R>> states;
-        final Collection<Path<State<R>>> deadLockPaths;
+        final Graph<State<R>, String> states;
+        final Collection<Path<State<R>, String>> deadLockPaths;
 
         public void printDot(PrintWriter writer) {
             writer.println("digraph {");
@@ -158,7 +158,7 @@ public class DeadLockFinder {
                 }
                 writer.println("];");
             }
-            for (Graph.Edge<State<R>> edge : states.getEdges()) {
+            for (Graph.Edge<State<R>, String> edge : states.getEdges()) {
                 writer.print("    ");
                 writer.print(states.getNodeName(edge.getSource()));
                 writer.print(" -> ");
@@ -181,7 +181,7 @@ public class DeadLockFinder {
     public final <R> Lts<R> concurrentComposition(R r0, List<Process<R>> processes) {
         final State<R> s0 =
             State.of(r0, processes.stream().map(Process::initial).collect(Collectors.toList()));
-        final Function<State<R>, Collection<EgressEdge<State<R>>>> next = s -> {
+        final Function<State<R>, Collection<EgressEdge<State<R>, String>>> next = s -> {
             final Map<Label, State<R>> labelToState = new HashMap<>();
             for (ProcessCursor<R> processCursor : s.getProcessCursors()) {
                 final Location location = processCursor.getLocation();
@@ -208,10 +208,10 @@ public class DeadLockFinder {
                 .map(label -> EgressEdge.of(label.getLabel(), labelToState.get(label)))
                 .collect(Collectors.toSet());
         };
-        final Search<State<R>> search = new BreadthFirstSearch<State<R>>();
+        final Search<State<R>, String> search = new BreadthFirstSearch<State<R>, String>();
 
-        final Collection<Path<State<R>>> deadLockPaths = new ArrayList<>();
-        final Graph<State<R>> graph = search.search(
+        final Collection<Path<State<R>, String>> deadLockPaths = new ArrayList<>();
+        final Graph<State<R>, String> graph = search.search(
             s0,
             next,
             (s, egressEdges) -> egressEdges.isEmpty(),

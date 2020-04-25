@@ -8,16 +8,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 @RequiredArgsConstructor
-public class Graph<S> {
+public class Graph<S, L> {
     @Value
-    public static class Edge<S> {
+    public static class Edge<S, L> {
         S source;
-        String label;
+        L label;
         S target;
     }
 
     final Map<S, String> names;
-    final Map<S, Collection<EgressEdge<S>>> graphAsMap;
+    final Map<S, Collection<EgressEdge<S, L>>> graphAsMap;
 
     public int size() {
         return names.size();
@@ -35,11 +35,11 @@ public class Graph<S> {
         return names.values();
     }
 
-    public Iterable<Edge<S>> getEdges() {
-        final Collection<Edge<S>> edges = new ArrayList<>();
+    public Iterable<Edge<S, L>> getEdges() {
+        final Collection<Edge<S, L>> edges = new ArrayList<>();
         for (S s : graphAsMap.keySet()) {
-            for (EgressEdge<S> egressEdge : graphAsMap.get(s)) {
-                edges.add(new Edge<S>(s, egressEdge.getLabel(), egressEdge.getValue()));
+            for (EgressEdge<S, L> egressEdge : graphAsMap.get(s)) {
+                edges.add(new Edge<S, L>(s, egressEdge.getLabel(), egressEdge.getValue()));
             }
         }
         return edges;
@@ -48,7 +48,7 @@ public class Graph<S> {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (Edge<S> edge : getEdges()) {
+        for (Edge<S, L> edge : getEdges()) {
             sb.append(getNodeName(edge.getSource()));
             sb.append(" --");
             sb.append(edge.getLabel());

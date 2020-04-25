@@ -22,7 +22,7 @@ public abstract class ModelSupport<R> {
     public void run(String[] args) throws IOException {
         final Lts<R> lts = deadLockFinder.concurrentComposition(r0(), processes());
 
-        for (Path<State<R>> deadLockPath : lts.getDeadLockPaths()) {
+        for (Path<State<R>, String> deadLockPath : lts.getDeadLockPaths()) {
             System.out.println("------------");
             deadLockPath.print(new PrintWriter(System.out));
         }

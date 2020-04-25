@@ -54,19 +54,19 @@ class BreadthFirstSearchTest {
             Inner.of(Leaf.of("A"), Leaf.of("B")),
             Inner.of(Leaf.of("C"), Inner.of(Leaf.of("D"), Leaf.of("E"))));
 
-        final Search<Node<String>> bfs = new BreadthFirstSearch<Node<String>>();
-        final Collection<Path<Node<String>>> foundPaths = new ArrayList<>();
-        final Graph<Node<String>> graph = bfs.search(
+        final Search<Node<String>, String> bfs = new BreadthFirstSearch<Node<String>, String>();
+        final Collection<Path<Node<String>, String>> foundPaths = new ArrayList<>();
+        final Graph<Node<String>, String> graph = bfs.search(
             tree,
-            node -> node.accept(new NodeVisitor<String, Collection<EgressEdge<Node<String>>>>() {
+            node -> node.accept(new NodeVisitor<String, Collection<EgressEdge<Node<String>, String>>>() {
 
                 @Override
-                public List<EgressEdge<Node<String>>> visitLeaf(Leaf<String> leaf) {
+                public List<EgressEdge<Node<String>, String>> visitLeaf(Leaf<String> leaf) {
                     return Collections.emptyList();
                 }
 
                 @Override
-                public List<EgressEdge<Node<String>>> visitInner(Inner<String> inner) {
+                public List<EgressEdge<Node<String>, String>> visitInner(Inner<String> inner) {
                     return Arrays.asList(
                         EgressEdge.of("left", inner.getLeft()),
                         EgressEdge.of("right", inner.getRight()));

@@ -12,49 +12,50 @@ import java.util.function.Function;
 import lombok.Value;
 
 @Value
-class Todo<S> {
+class Todo<S, L> {
     private S state;
     private int id;
-    private Path<S> path;
+    private Path<S, L> path;
 
     private static int nextId = 0;
 
-    public static <S> Todo<S> of(S state, Path<S> path) {
-        return new Todo<S>(state, nextId++, path);
+    public static <S, L> Todo<S, L> of(S state, Path<S, L> path) {
+        return new Todo<S, L>(state, nextId++, path);
     }
 }
 
-public class BreadthFirstSearch<S> implements Search<S> {
+public class BreadthFirstSearch<S, L> implements Search<S, L> {
 
     @Override
-    public Graph<S> search(S initialState, Function<S, Collection<EgressEdge<S>>> next,
-            BiPredicate<S, Collection<EgressEdge<S>>> pred, BiPredicate<S, Collection<EgressEdge<S>>> finish,
-            Collection<Path<S>> pathCollector) {
+    public Graph<S, L> search(S initialState, Function<S, Collection<EgressEdge<S, L>>> next,
+            BiPredicate<S, Collection<EgressEdge<S, L>>> pred,
+            BiPredicate<S, Collection<EgressEdge<S, L>>> finish, Collection<Path<S, L>> pathCollector) {
         final Map<S, String> names = new HashMap<>();
         names.put(initialState, "s0");
-        final Map<S, Collection<EgressEdge<S>>> seen = new HashMap<>();
+        final Map<S, Collection<EgressEdge<S, L>>> seen = new HashMap<>();
         seen.put(initialState, Collections.emptyList());
-        final Queue<Todo<S>> agenda = new ArrayBlockingQueue<>(256);
+        final Queue<Todo<S, L>> agenda = new ArrayBlockingQueue<>(256);
         agenda.add(Todo.of(initialState, Path.of(initialState)));
 
         while (true) {
-            final Todo<S> todo = agenda.poll();
+            final Todo<S, L> todo = agenda.poll();
             if (todo == null) {
-                return new Graph<S>(names, seen);
+                return new Graph<S, L>(names, seen);
             }
-            final Collection<EgressEdge<S>> egressEdges = next.apply(todo.getState());
+            final Collection<EgressEdge<S, L>> egressEdges = next.apply(todo.getState());
             if (pred.test(todo.getState(), egressEdges)) {
                 pathCollector.add(todo.getPath());
             }
             if (finish.test(todo.getState(), egressEdges)) {
-                return new Graph<S>(names, seen);
+                return new Graph<S, L>(names, seen);
             }
             seen.put(todo.getState(), egressEdges);
-            for (EgressEdge<S> egressEdge : egressEdges) {
+            for (EgressEdge<S, L> egressEdge : egressEdges) {
                 if (!seen.containsKey(egressEdge.getValue())) {
                     seen.put(egressEdge.getValue(), Collections.emptyList());
                     names.put(egressEdge.getValue(), "s" + Integer.toString(names.size()));
-                    final Path<S> newPath = todo.getPath().add(egressEdge.getLabel(), egressEdge.getValue());
+                    final Path<S, L> newPath =
+                        todo.getPath().add(egressEdge.getLabel(), egressEdge.getValue());
                     agenda.offer(Todo.of(egressEdge.getValue(), newPath));
                 }
             }
