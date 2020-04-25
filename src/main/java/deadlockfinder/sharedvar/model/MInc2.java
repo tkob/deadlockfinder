@@ -1,14 +1,14 @@
-package deadlockfinder.model;
+package deadlockfinder.sharedvar.model;
 
-import static deadlockfinder.DeadLockFinder.trans;
-import static deadlockfinder.Location.loc;
+import static deadlockfinder.sharedvar.DeadLockFinder.trans;
+import static deadlockfinder.sharedvar.Location.loc;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import deadlockfinder.DeadLockFinder.Process;
-import deadlockfinder.DeadLockFinder.ProcessBuilder;
+import deadlockfinder.sharedvar.DeadLockFinder.Process;
+import deadlockfinder.sharedvar.DeadLockFinder.ProcessBuilder;
 import lombok.Value;
 import lombok.With;
 

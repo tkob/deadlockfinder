@@ -1,15 +1,15 @@
-package deadlockfinder;
+package deadlockfinder.sharedvar;
 
-import static deadlockfinder.DeadLockFinder.trans;
-import static deadlockfinder.Location.loc;
+import static deadlockfinder.sharedvar.DeadLockFinder.trans;
+import static deadlockfinder.sharedvar.Location.loc;
 
 import java.io.PrintWriter;
 
 import org.junit.jupiter.api.Test;
 
-import deadlockfinder.DeadLockFinder.Process;
-import deadlockfinder.DeadLockFinder.ProcessBuilder;
-import deadlockfinder.model.MInc2;
+import deadlockfinder.sharedvar.DeadLockFinder.Process;
+import deadlockfinder.sharedvar.DeadLockFinder.ProcessBuilder;
+import deadlockfinder.sharedvar.model.MInc2;
 
 class ProcessTest {
 

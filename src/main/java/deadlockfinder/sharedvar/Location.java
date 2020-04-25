@@ -1,4 +1,4 @@
-package deadlockfinder;
+package deadlockfinder.sharedvar;
 
 import java.util.HashMap;
 import java.util.Map;

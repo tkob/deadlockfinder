@@ -1,15 +1,15 @@
-package deadlockfinder.model;
+package deadlockfinder.sharedvar.model;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import deadlockfinder.DeadLockFinder;
-import deadlockfinder.DeadLockFinder.Lts;
-import deadlockfinder.DeadLockFinder.Process;
-import deadlockfinder.DeadLockFinder.State;
 import deadlockfinder.search.Path;
+import deadlockfinder.sharedvar.DeadLockFinder;
+import deadlockfinder.sharedvar.DeadLockFinder.Lts;
+import deadlockfinder.sharedvar.DeadLockFinder.Process;
+import deadlockfinder.sharedvar.DeadLockFinder.State;
 
 public abstract class ModelSupport<R> {
 
