@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
@@ -18,6 +19,9 @@ public class Graph<S, L> {
 
     final Map<S, String> names;
     final Map<S, Collection<EgressEdge<S, L>>> graphAsMap;
+
+    @Getter
+    final S initialNode;
 
     public int size() {
         return names.size();

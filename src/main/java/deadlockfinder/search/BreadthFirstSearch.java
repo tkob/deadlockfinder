@@ -40,14 +40,14 @@ public class BreadthFirstSearch<S, L> implements Search<S, L> {
         while (true) {
             final Todo<S, L> todo = agenda.poll();
             if (todo == null) {
-                return new Graph<S, L>(names, seen);
+                return new Graph<S, L>(names, seen, initialState);
             }
             final Collection<EgressEdge<S, L>> egressEdges = next.apply(todo.getState());
             if (pred.test(todo.getState(), egressEdges)) {
                 pathCollector.add(todo.getPath());
             }
             if (finish.test(todo.getState(), egressEdges)) {
-                return new Graph<S, L>(names, seen);
+                return new Graph<S, L>(names, seen, initialState);
             }
             seen.put(todo.getState(), egressEdges);
             for (EgressEdge<S, L> egressEdge : egressEdges) {
