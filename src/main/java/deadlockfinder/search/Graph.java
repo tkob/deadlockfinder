@@ -49,6 +49,10 @@ public class Graph<S, L> {
         return edges;
     }
 
+    public Collection<EgressEdge<S, L>> getEgressEdges(S node) {
+        return graphAsMap.get(node);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
